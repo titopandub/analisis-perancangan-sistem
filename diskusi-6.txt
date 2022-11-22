@@ -1,0 +1,43 @@
+@startuml
+actor   Penonton as Penonton
+actor   Tim_Konten as Konten
+database    Tabel_Event as Tabel_Event
+database    Tabel_Video as Tabel_Video
+database    Tabel_Penonton as Tabel_Penonton
+autonumber 1.1
+Penonton -> Tabel_Penonton: Registrasi data diri
+Penonton -> Tabel_Event: Data Event menonton
+Konten -> Tabel_Video: Mengunggah Video dan Metadata
+autonumber 2.1
+ETL -> Tabel_Event: Mengambil data Event 
+activate Tabel_Event
+Tabel_Event --> ETL: Data Event
+deactivate Tabel_Event
+ETL -> Tabel_Penonton: Mengambil data Penonton
+activate Tabel_Penonton
+Tabel_Penonton --> ETL: Data Penonton
+deactivate Tabel_Penonton
+ETL -> Tabel_Video: Mengambil data Video
+activate Tabel_Video
+Tabel_Video --> ETL: Data Video
+deactivate Tabel_Video
+ETL -> Storage: Menaruh data Training
+autonumber 3.1
+Training -> Storage: Mengambil data Training
+activate Storage
+Storage --> Training: Data Training
+deactivate Storage
+activate Training
+Training -> Training: Training Rekomendasi Video
+Training -> Storage: Menaruh data model Rekomendasi
+deactivate Training
+autonumber 4.1
+Server -> Storage: Mengambil data model Rekomendasi
+activate Storage
+Storage --> Server: Data Model Rekomendasi
+deactivate Storage
+Penonton -> Server: Meminta Rekomendasi untuk dirinya
+activate Server
+Server --> Penonton: Rekomendasi
+deactivate Server
+@enduml
