@@ -1,0 +1,47 @@
+@startuml tugas-3
+actor Pengguna as Pengguna
+participant Peminjaman as Peminjaman
+database Tabel_Keranjang as Keranjang
+database Tabel_Buku as Tabel_Buku
+
+alt stock buku tersedia
+autonumber 1.1
+Pengguna -> Peminjaman: Pinjam Buku sesuai daftar
+activate Peminjaman
+Peminjaman -> Keranjang: Ambil daftar buku yang akan dipinjam
+activate Keranjang
+Keranjang --> Peminjaman: Daftar Buku
+deactivate Keranjang
+Peminjaman -> Tabel_Buku: Cek Stok setiap Buku
+activate Tabel_Buku
+Tabel_Buku --> Peminjaman: Stok Buku Tersedia
+Peminjaman -> Tabel_Buku: Kurangi Stok
+Tabel_Buku --> Peminjaman: Konfirmasi Berhasil
+deactivate Tabel_Buku
+Peminjaman -> Keranjang: Kosongkan daftar buku
+activate Keranjang
+Keranjang --> Peminjaman: Konfirmasi
+deactivate Keranjang
+Peminjaman --> Pengguna: Konfirmasi Peminjaman Berhasil
+deactivate Peminjaman
+
+else stok buku tidak tersedia
+autonumber 1.1
+Pengguna -> Peminjaman: Pinjam Buku sesuai daftar
+activate Peminjaman
+Peminjaman -> Keranjang: Ambil daftar buku yang akan dipinjam
+activate Keranjang
+Keranjang --> Peminjaman: Daftar Buku
+deactivate Keranjang
+Peminjaman -> Tabel_Buku: Cek Stok setiap Buku
+activate Tabel_Buku
+Tabel_Buku --> Peminjaman: Stok Buku Tidak Tersedia
+deactivate Tabel_Buku
+Peminjaman -> Keranjang: Kosongkan daftar buku
+activate Keranjang
+Keranjang --> Peminjaman: Konfirmasi
+deactivate Keranjang
+Peminjaman --> Pengguna: Gagal meminjam Buku
+deactivate Peminjaman
+end
+@enduml
